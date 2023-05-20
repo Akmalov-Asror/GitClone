@@ -1,11 +1,8 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using CloneRepo.Data;
+﻿using CloneRepo.Data;
 using CloneRepo.DTOs;
 using CloneRepo.Entities;
-using Mapster;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CloneRepo.Controllers;
 
@@ -14,38 +11,37 @@ namespace CloneRepo.Controllers;
 public class GithubRepositoryController : ControllerBase
 {
     public readonly AppDbContext _context;
-    private readonly UserManager<User> _userManager;
 
-    public GithubRepositoryController(AppDbContext context, UserManager<User> userManager)
+    public GithubRepositoryController(AppDbContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     [HttpGet]
-    public IActionResult GetUsers()
+    public IActionResult GetUsersAsync()
     {
         var user = _context.Users.ToList();
+
         if (user == null)
-        {
             return BadRequest();
-        }
+
         return Ok(user);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateUserAsync(UserDto userDto)
     {
-        var user = new User()
-        {
-            Name = userDto.Name,
-            Email = userDto.Email
-        };
-        var userCreateResult = await _userManager.CreateAsync(user, userDto.Password);
+        var user = new User();
+        user.Name = userDto.Name;
+        user.Email = userDto.Email;
+        user.Password = userDto.Password;
 
-        if (!userCreateResult.Succeeded)
+        if (user is null)
             return BadRequest();
 
-        return Ok(userCreateResult);
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 }
