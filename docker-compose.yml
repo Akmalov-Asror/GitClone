@@ -1,0 +1,35 @@
+﻿version: '3.7'
+
+services:
+
+  clonerepo:
+    image: clonerepo
+    depends_on:
+      - clonerepo_db
+    container_name: clonrepo
+    ports: 
+      - "1001:80"
+    build:
+      context: CloneRepo
+      dockerfile: Dockerfile
+    networks:
+      - dev
+
+  clonerepo_db:
+    image: postgres:latest
+    container_name: clonerepo_db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - dev
+
+networks:
+  dev:
+    driver: bridge 
+
+volumes:
+  customer_data:
+  pgadmin:
