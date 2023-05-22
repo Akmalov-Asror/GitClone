@@ -1,5 +1,8 @@
 using CloneRepo.Data;
 using CloneRepo.Entities;
+using CloneRepo.Repositories;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddHangfire(config => config
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<RepositoryFetcher>();
+builder.Services.AddScoped<RepositoryFetcherJob>();
+builder.Services.AddHangfireServer();   
 
 var app = builder.Build();
 
@@ -24,5 +36,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+app.UseHangfireDashboard();
+app.MapHangfireDashboard();
 
 app.Run();
