@@ -2,6 +2,7 @@ using CloneRepo.Data;
 using CloneRepo.Entities;
 using CloneRepo.Extensions;
 using CloneRepo.Repositories;
+using CloneRepo.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -21,19 +22,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
 builder.Services.AddHangfire(config => config
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
 builder.Services.AddScoped<RepositoryFetcher>();
 builder.Services.AddScoped<RepositoryFetcherJob>();
+builder.Services.AddScoped<GitHubService>();
 builder.Services.AddHangfireServer();   
 
 var app = builder.Build();
 
+app.ConfigureHangfire(app.Environment, app.Services.GetRequiredService<IBackgroundJobClient>(), app.Services.GetRequiredService<IRecurringJobManager>(), app.Services.GetRequiredService<GitHubService>());
 
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -46,7 +48,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-app.UseHangfireDashboard();
 app.MapHangfireDashboard();
 
 app.Run();
+BackgroundJob.Enqueue(() => Console.WriteLine("Hello World"));
+using (var server = new BackgroundJobServer())
+{
+    Console.ReadLine();
+}

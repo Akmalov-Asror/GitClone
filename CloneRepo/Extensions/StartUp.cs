@@ -28,9 +28,9 @@ public static class StartUp
         builder.Services.AddScoped<RepositoryFetcher>();
 
         builder.Services.AddControllers();
-    }
 
-    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs, IRecurringJobManager recurringJobs, RepositoryFetcher repositoryFetcher)
+    }
+    public static void ConfigureHangfire(this IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs, IRecurringJobManager recurringJobs, RepositoryFetcher repositoryFetcher)
     {
         if (env.IsDevelopment())
         {
@@ -41,7 +41,7 @@ public static class StartUp
 
         backgroundJobs.Enqueue(() => repositoryFetcher.FetchRepositories());
 
-        recurringJobs.AddOrUpdate(null,() => repositoryFetcher.FetchRepositories(), "*/10 * * * *");
+        recurringJobs.AddOrUpdate("JobConfigure",() => repositoryFetcher.FetchRepositories(), "*/10 * * * *");
 
         app.UseRouting();
 
