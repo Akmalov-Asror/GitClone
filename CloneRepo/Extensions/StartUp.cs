@@ -2,34 +2,35 @@
 using CloneRepo.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
+using System.Runtime.CompilerServices;
 
 namespace CloneRepo.Extensions;
 
-public class StartUp
+public static class StartUp
 {
-    private readonly IConfiguration _configuration;
+    /*private readonly IConfiguration _configuration;
 
     public StartUp(IConfiguration configuration)
     {
         _configuration = configuration;
-    }
+    }*/
 
-    public void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(this WebApplicationBuilder builder)
     {
-        services.AddHangfire(config =>
+        builder.Services.AddHangfire(config =>
         {
-            config.UsePostgreSqlStorage(_configuration.GetConnectionString("Hangfire"));
+            config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire"));
         });
 
-        services.AddHttpClient();
+        builder.Services.AddHttpClient();
 
-        services.AddScoped<GitHubService>();
-        services.AddScoped<RepositoryFetcher>();
+        builder.Services.AddScoped<GitHubService>();
+        builder.Services.AddScoped<RepositoryFetcher>();
 
-        services.AddControllers();
+        builder.Services.AddControllers();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs, IRecurringJobManager recurringJobs, RepositoryFetcher repositoryFetcher)
+    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs, IRecurringJobManager recurringJobs, RepositoryFetcher repositoryFetcher)
     {
         if (env.IsDevelopment())
         {

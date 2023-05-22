@@ -1,5 +1,6 @@
 using CloneRepo.Data;
 using CloneRepo.Entities;
+using CloneRepo.Extensions;
 using CloneRepo.Repositories;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -11,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//todo Extension method is here
+builder.ConfigureServices();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
