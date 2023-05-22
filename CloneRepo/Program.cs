@@ -5,6 +5,7 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -19,6 +20,8 @@ builder.Services.AddHangfire(config => config
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 builder.Services.AddScoped<RepositoryFetcher>();
 builder.Services.AddScoped<RepositoryFetcherJob>();

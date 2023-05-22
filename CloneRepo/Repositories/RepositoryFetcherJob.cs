@@ -11,6 +11,6 @@ public class RepositoryFetcherJob
 
     public async Task FetchRepositoriesJob(string owner, int count)
     {
-        await _repositoryFetcher.FetchRepositories(owner, count);
+        await _repositoryFetcher.FetchRepositories();
     }
 }

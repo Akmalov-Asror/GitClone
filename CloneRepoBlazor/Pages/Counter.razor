@@ -1,11 +1,1 @@
-﻿@page "/counter"
-@inject HttpClient Http
-@using CloneRepo.Repositories;
-@inject RepositoryFetcherJob _repositoryFetcherJob
-
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        RecurringJob.AddOrUpdate(async () => await _repositoryFetcherJob.FetchRepositoriesJob("GitHubUserName", 10), "*/10 * * * *");
-    }
-}
+﻿

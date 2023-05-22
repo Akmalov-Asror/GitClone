@@ -1,8 +1,8 @@
 ﻿using CloneRepo.Data;
 using CloneRepo.DTOs;
 using CloneRepo.Entities;
+using CloneRepo.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CloneRepo.Controllers;
 
@@ -10,8 +10,8 @@ namespace CloneRepo.Controllers;
 [ApiController]
 public class GithubRepositoryController : ControllerBase
 {
-    public readonly AppDbContext _context;
-
+    private readonly AppDbContext _context;
+    private readonly RepositoryFetcher _repositoryFetcher;
     public GithubRepositoryController(AppDbContext context)
     {
         _context = context;
@@ -43,5 +43,11 @@ public class GithubRepositoryController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpPost("Repository")]
+    public async Task FetchRepositoriesJob(string owner, int count)
+    {
+        await _repositoryFetcher.FetchRepositories();
     }
 }
