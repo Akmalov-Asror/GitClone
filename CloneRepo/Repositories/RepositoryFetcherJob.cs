@@ -9,8 +9,4 @@ public class RepositoryFetcherJob
         _repositoryFetcher = repositoryFetcher;
     }
 
-    public async Task FetchRepositoriesJob(string owner, int count)
-    {
-        await _repositoryFetcher.FetchRepositories();
-    }
 }

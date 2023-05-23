@@ -1,12 +1,13 @@
 using CloneRepo.Data;
-using CloneRepo.Entities;
 using CloneRepo.Extensions;
 using CloneRepo.Repositories;
 using CloneRepo.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
-
+using Octokit;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,21 +22,22 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+builder.Services.AddScoped<GitHubClient>(provider =>
+{
+    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var client = new GitHubClient(new ProductHeaderValue("Auto.Test.Bot"));
+    return client;
+});
 
 builder.Services.AddHangfire(config => config
-    .UseSimpleAssemblyNameTypeSerializer()
-    .UseRecommendedSerializerSettings()
     .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddHostedService<ProjectFetcherService>();
 builder.Services.AddScoped<RepositoryFetcher>();
-builder.Services.AddScoped<RepositoryFetcherJob>();
-builder.Services.AddScoped<GitHubService>();
+
 builder.Services.AddHangfireServer();   
 
 var app = builder.Build();
 
-app.ConfigureHangfire(app.Environment, app.Services.GetRequiredService<IBackgroundJobClient>(), app.Services.GetRequiredService<IRecurringJobManager>(), app.Services.GetRequiredService<GitHubService>());
 
     app.UseSwagger();
     app.UseSwaggerUI();

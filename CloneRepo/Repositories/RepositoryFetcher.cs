@@ -1,32 +1,28 @@
 ﻿using CloneRepo.Data;
 using CloneRepo.Services;
+using Microsoft.EntityFrameworkCore;
 using Octokit;
 
 namespace CloneRepo.Repositories;
 
 public class RepositoryFetcher
 {
-    private readonly GitHubService _gitHubService;
-    private readonly AppDbContext _dbContext;
+    private readonly DbContextOptions<AppDbContext> _dbContextOptions;
 
-    public RepositoryFetcher(GitHubService gitHubService, AppDbContext dbContext)
+    public RepositoryFetcher(DbContextOptions<AppDbContext> dbContextOptions)
     {
-        _gitHubService = gitHubService;
-        _dbContext = dbContext;
+        _dbContextOptions = dbContextOptions;
     }
 
-    public async Task FetchRepositories()
+    public async Task SaveRepository(Repository repository)
     {
-        var owner = "YourGitHubUsername";
-        var count = 10;
-
-        var repositories = await _gitHubService.GetRepositories(owner, count);
-
-        foreach (var repository in repositories)
+        using (var dbContext = new AppDbContext(_dbContextOptions))
         {
-            _dbContext.Repositories.Add(repository);
-        }
+            // Repository ma'lumotlarini Postgres ma'lumotlar bazasiga saqlash
+            // dbContext orqali ma'lumotlar bazasiga qo'shimcha ma'lumotlarni saqlash
+            //dbContext.Repositories.Add(repository);
 
-        await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace CloneRepo.Extensions;
 
 public static class StartUp
 {
+    private static readonly RepositoryFetcher _repositoryFetcher;
     /*private readonly IConfiguration _configuration;
 
     public StartUp(IConfiguration configuration)
@@ -30,24 +31,5 @@ public static class StartUp
         builder.Services.AddControllers();
 
     }
-    public static void ConfigureHangfire(this IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobs, IRecurringJobManager recurringJobs, RepositoryFetcher repositoryFetcher)
-    {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        app.UseHangfireDashboard();
-
-        backgroundJobs.Enqueue(() => repositoryFetcher.FetchRepositories());
-
-        recurringJobs.AddOrUpdate("JobConfigure",() => repositoryFetcher.FetchRepositories(), "*/10 * * * *");
-
-        app.UseRouting();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-    }
+    
 }
