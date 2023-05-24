@@ -16,13 +16,17 @@ public class RepositoryFetcher
 
     public async Task SaveRepository(Repository repository)
     {
-        using (var dbContext = new AppDbContext(_dbContextOptions))
+        var dbContext = new AppDbContext(_dbContextOptions);
+        if (await dbContext.Repositories.AnyAsync(g => g.Id != repository.Id))
         {
-            // Repository ma'lumotlarini Postgres ma'lumotlar bazasiga saqlash
-            // dbContext orqali ma'lumotlar bazasiga qo'shimcha ma'lumotlarni saqlash
-            //dbContext.Repositories.Add(repository);
-
+            dbContext.Repositories.Add(new Entities.Repository()
+            {
+                Name = repository.Name,
+                Description = repository.Description ?? "a"
+            });
             await dbContext.SaveChangesAsync();
         }
+        
     }
+
 }

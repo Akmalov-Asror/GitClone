@@ -1,8 +1,10 @@
 ﻿using CloneRepo.Data;
 using CloneRepo.DTOs;
+using CloneRepo.Entities;
 using CloneRepo.Repositories;
 using CloneRepo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Octokit;
 using User = CloneRepo.Entities.User;
 
@@ -14,10 +16,12 @@ public class GithubRepositoryController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly RepositoryFetcher _repositoryFetcher;
-    public GithubRepositoryController(AppDbContext context, RepositoryFetcher repositoryFetcher)
+    private readonly GitHubService _gitHubService;
+    public GithubRepositoryController(AppDbContext context, RepositoryFetcher repositoryFetcher, GitHubService gitHubService)
     {
         _context = context;
         _repositoryFetcher = repositoryFetcher;
+        _gitHubService = gitHubService;
     }
 
     [HttpGet]
@@ -47,4 +51,5 @@ public class GithubRepositoryController : ControllerBase
 
         return Ok();
     }
+
 }

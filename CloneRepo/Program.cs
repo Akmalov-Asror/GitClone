@@ -15,7 +15,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//todo Extension method is here
 builder.ConfigureServices();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -53,8 +52,3 @@ app.MapControllers();
 app.MapHangfireDashboard();
 
 app.Run();
-BackgroundJob.Enqueue(() => Console.WriteLine("Hello World"));
-using (var server = new BackgroundJobServer())
-{
-    Console.ReadLine();
-}

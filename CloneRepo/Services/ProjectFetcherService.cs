@@ -16,7 +16,7 @@ public class ProjectFetcherService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
 
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -24,10 +24,6 @@ public class ProjectFetcherService : BackgroundService
                 var repositoryFetcher = scope.ServiceProvider.GetRequiredService<RepositoryFetcher>();
 
                 var repositories = await githubClient.Repository.GetAllForUser(githubUsername);
-
-                /*var jobId = BackgroundJob.Schedule(
-                    () => 
-                    TimeSpan.FromDays(7));*/
 
                 foreach (var repository in repositories)
                 {
