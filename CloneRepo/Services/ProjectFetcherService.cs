@@ -7,7 +7,7 @@ namespace CloneRepo.Services;
 public class ProjectFetcherService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    public string githubUsername = "https://api.github.com/Akmalov-Asror";
+    public string githubUsername = "Akmalov-Asror";
     public ProjectFetcherService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
