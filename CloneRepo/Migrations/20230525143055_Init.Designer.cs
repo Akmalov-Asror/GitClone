@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CloneRepo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230520153930_Init")]
+    [Migration("20230525143055_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -23,6 +23,26 @@ namespace CloneRepo.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CloneRepo.Entities.Repository", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Repositories");
+                });
 
             modelBuilder.Entity("CloneRepo.Entities.User", b =>
                 {

@@ -4,6 +4,7 @@ using CloneRepo.Entities;
 using CloneRepo.Repositories;
 using CloneRepo.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Octokit;
 using User = CloneRepo.Entities.User;
@@ -24,14 +25,11 @@ public class GithubRepositoryController : ControllerBase
         _gitHubService = gitHubService;
     }
 
-    [HttpGet]
-    public IActionResult GetUsersAsync()
+    [HttpGet("gitRepositories")]
+    public async Task<IActionResult> GetUsersAsync()
     {
-        var user = _context.Users.ToList();
-        var users = _context.Repositories.ToList();
-        if (user == null)
-            return BadRequest();
-
+        var users = await _context.Repositories.ToListAsync();
+        
         return Ok(users);
     }
 

@@ -28,27 +28,24 @@ builder.Services.AddScoped<GitHubClient>(provider =>
     return client;
 });
 
-builder.Services.AddHangfire(config => config
-    .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddHostedService<ProjectFetcherService>();
 builder.Services.AddScoped<RepositoryFetcher>();
 
-builder.Services.AddHangfireServer();   
-
 var app = builder.Build();
-
 
     app.UseSwagger();
     app.UseSwaggerUI();
 
+if (app.Services.GetService<AppDbContext>() != null)
+{
+    var db = app.Services.GetRequiredService<AppDbContext>();
+    db.Database.Migrate(); 
+}
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-
-app.MapHangfireDashboard();
 
 app.Run();
