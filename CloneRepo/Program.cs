@@ -2,12 +2,8 @@ using CloneRepo.Data;
 using CloneRepo.Extensions;
 using CloneRepo.Repositories;
 using CloneRepo.Services;
-using Hangfire;
-using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Octokit;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,19 +26,31 @@ builder.Services.AddScoped<GitHubClient>(provider =>
 
 builder.Services.AddHostedService<ProjectFetcherService>();
 builder.Services.AddScoped<RepositoryFetcher>();
+builder.Services.AddCors(cors =>
+{
+    cors.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
     app.UseSwagger();
     app.UseSwaggerUI();
 
-if (app.Services.GetService<AppDbContext>() != null)
+/*if (app.Services.GetService<AppDbContext>() != null)
 {
     var db = app.Services.GetRequiredService<AppDbContext>();
     db.Database.Migrate(); 
-}
+}*/
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 

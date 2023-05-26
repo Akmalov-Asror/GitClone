@@ -2,7 +2,6 @@
 @using CloneRepoBlazor.DTO_s
 @inject HttpClient Http
 
-
 @foreach (var i in values)
 {
     <h5>Id: @i.Id</h5>
@@ -17,7 +16,7 @@
     private List<GetGitHubRepositoriesDto>? values = new List<GetGitHubRepositoriesDto>();
     protected override async Task OnInitializedAsync()
     {
-        values = await Http.GetFromJsonAsync<List<GetGitHubRepositoriesDto>>("https://localhost:1001/api/GithubRepository/gitRepositories");
+        values = await Http.GetFromJsonAsync<List<GetGitHubRepositoriesDto>>("api/GithubRepository/gitRepositories");
 
     }
 }
