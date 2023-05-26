@@ -32,8 +32,7 @@ builder.Services.AddCors(cors =>
     {
         policy.AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
 
@@ -42,11 +41,11 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 
-/*if (app.Services.GetService<AppDbContext>() != null)
+if (app.Services.GetService<AppDbContext>() != null)
 {
     var db = app.Services.GetRequiredService<AppDbContext>();
-    db.Database.Migrate(); 
-}*/
+    db.Database.Migrate();
+}
 
 app.UseHttpsRedirection();
 
