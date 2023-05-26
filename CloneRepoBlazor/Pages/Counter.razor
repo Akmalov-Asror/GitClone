@@ -3,7 +3,11 @@
 @inject HttpClient Http
 @foreach (var i in values)
 {
-    <h5>@i</h5>
+    <h5>Id: @i.Id</h5>
+    <h5>Name: @i.Name</h5>
+    <h5>Description: @i.Description</h5>
+
+    <br>
 }
 
 @code{
@@ -12,21 +16,5 @@
     protected override async Task OnInitializedAsync()
     {
         values = await Http.GetFromJsonAsync<List<GetGitHubRepositoriesDto>>("api/GitRepositories");
-       // ConnectToHub();
     }
-
-
 }
-@*private async Task ConnectToHub()
-    {
-
-        var connection = HubConnetionBuilder().WithUrl("https://localhost:1001/values-hub").Build();
-
-        connection.On<List<GetGitHubRepositoriesDto>>("NewValue", (List<GetGitHubRepositoriesDto> i) =>
-        {
-            values.Add(i);
-
-            StateHasChanged();
-        });
-        await connection.StartAsync();
-    }*@
