@@ -16,7 +16,7 @@ public class ProjectFetcherService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromSeconds(100), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
 
             using (var scope = _serviceProvider.CreateScope())
             {

@@ -17,12 +17,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddScoped<GitHubClient>(provider =>
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var client = new GitHubClient(new ProductHeaderValue("Auto.Test.Bot"));
-    return client;
-});
 
 builder.Services.AddHostedService<ProjectFetcherService>();
 builder.Services.AddScoped<RepositoryFetcher>();

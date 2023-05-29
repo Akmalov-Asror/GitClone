@@ -2,32 +2,31 @@
 
 services:
     
-  clonerepo:
-    image: clonerepo
+  gitclone:
+    image: gitclone
     depends_on:
-      - clonerepo_db
-    container_name: clonrepo
+      - gitclone_db
+    container_name: gitclone
     ports: 
       - "1001:80"
     build:
-      context: CloneRepo
+      context: GitClone
       dockerfile: Dockerfile
     networks:
       - dev
-       
-  clonerepoblazor:
-    image: clonerepoblazor
-    container_name: clonerepoblazor
+
+  frontend:
+    image: frontend
+    container_name: frontend
     ports:
       - "2001:80"
     build:
-      context: CloneRepoBlazor
+      context: Frontend
       dockerfile: Dockerfile
-
 
   clonerepo_db:
     image: postgres:latest
-    container_name: clonerepo_db
+    container_name: gitclone_db
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:

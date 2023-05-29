@@ -9,12 +9,6 @@ namespace CloneRepo.Extensions;
 public static class StartUp
 {
     private static readonly RepositoryFetcher _repositoryFetcher;
-    /*private readonly IConfiguration _configuration;
-
-    public StartUp(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }*/
 
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
@@ -25,7 +19,6 @@ public static class StartUp
 
         builder.Services.AddHttpClient();
 
-        builder.Services.AddScoped<GitHubService>();
         builder.Services.AddScoped<RepositoryFetcher>();
 
         builder.Services.AddControllers();

@@ -20,7 +20,10 @@ public class RepositoryFetcher
         dbContext.Repositories.Add(new Entities.Repository()
         {
             Name = repository.Name,
-            Description = repository.Description ?? "a"
+            Description = repository.Description ?? "a",
+            HtmlUrl = repository.Owner.HtmlUrl,
+            Url = repository.Owner.HtmlUrl
+            
         });
         await dbContext.SaveChangesAsync();
 
