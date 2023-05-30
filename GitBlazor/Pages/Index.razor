@@ -1,0 +1,36 @@
+﻿@page "/"
+
+@using MudBlazor.DTO_s
+@inject HttpClient Http
+
+
+@foreach (var i in values)
+{
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description </th>
+            <th>HtmlUrl </th>
+            <th>Url </th>
+        </tr>
+        <tr>
+            <td>@i.Id</td>
+            <td>@i.Name</td>
+            <td>@i.Description</td>
+            <td>@i.HtmlUrl</td>
+            <td>@i.Url</td>
+        </tr>
+
+    </table>
+}
+
+@code {
+
+    private List<GetGitHubRepositoriesDto>? values = new List<GetGitHubRepositoriesDto>();
+    protected override async Task OnInitializedAsync()
+    {
+        values = await Http.GetFromJsonAsync<List<GetGitHubRepositoriesDto>>("api/GithubRepository/gitRepositories");
+
+    }
+}
